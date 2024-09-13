@@ -4,7 +4,6 @@
 
 import csv
 import time
-import pathlib
 from PyPDF2 import PdfReader
 from scrapers import *
 
@@ -43,7 +42,7 @@ for pdf_path in scrape_list:
         text_results.append(text)
     outtext = "\n\n".join(text_results)
     # scraping phase
-    #print(outtext)
+    # print(outtext)  - Debugging line
     dates = datescrape(outtext)
     loc_list = locationscrape(outtext)
     speed_list = speedscrape(outtext)
