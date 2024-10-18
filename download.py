@@ -12,11 +12,10 @@ import pathlib
 year = str(input('Enter year:'))
 
 path_input = str(input('Enter your username. This is usually your first initial and last name (and digits if '
-                       'applicable) found in front of your email address @clevelandohio.gov: '))
+                       'applicable) found in front of your email address @clevelandohio.gov:'))
 
 base_path = pathlib.Path(f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning '
-                         f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/DOS count'
-                         f'files')
+                         f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/DOS count files')
 
 output = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
          f'and Mobility/GIS Workspaces/Traffic Reports to GIS/output'
@@ -25,7 +24,7 @@ join_tables = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Docume
               f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/join tables'
 
 dump_dir = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-           f'and Mobility/GIS Workspaces/Traffic Reports to GIS/Counts {year}'
+           f'and Mobility/Traffic & Speed Counts/Counts {year}/PDFs'
 
 # Set up and confirm existing files
 
