@@ -1,0 +1,2 @@
+name,start_date,end_date,lat,lon,spdperc_15,spdperc_50,spdperc_85,spdperc_95,average_speed,adt
+3061 Livingston Radar,10/9/2024,10/15/2024,41.475022,-81.589615,16.8,21.1,26.1,29.8,21.32965032270494,1730
