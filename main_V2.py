@@ -1,4 +1,5 @@
 # This code is under development to update this code to use xlsx files directly instead of scraping PDFs
+# Paths must be updated once pushed to production to remove "dev" routing
 
 import pandas as pd
 from datetime import datetime
@@ -24,13 +25,13 @@ scrape_list = existing_list[start_idx:]  # only XLSXs that haven't been processe
 scrape_list_pdf = existing_list_pdf[start_idx:] # only PDFs that haven't been processed yet
 
 output = pathlib.Path(f'C:/Users/{download.path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation and Mobility/'
-f'GIS Workspaces/Traffic Reports to GIS/dev/output/output.csv')
+f'GIS Workspaces/Traffic Reports to GIS/dev/output')
 
 strip_path = str(pathlib.Path(f'C:/Users/{download.path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation and Mobility/'
 f'GIS Workspaces/Traffic Reports to GIS/dev')) # used for getting relative paths for join table, but still run the code outside the folder
 
 # Create a new dataframe to interpolate the data. temporary for now, need to add back in UID
-columns = ['uid', 'name', 'year', 'start_date', 'end_date', 'lat', 'lon', 'loc1', 'loc2', 'spdperc_15', 'spdperc_50', 'spdperc_85',
+columns = ['uid', 'year', 'start_date', 'end_date', 'lat', 'lon', 'loc1', 'loc2', 'spdperc_15', 'spdperc_50', 'spdperc_85',
            'spdperc_95', 'average_speed', 'adt']
 # output_df = pd.DataFrame(columns=columns)
 datarows = []
@@ -49,7 +50,6 @@ for file in scrape_list:
     # troubleshooting line
     # print(info_df)
     # Extract values
-    name = info_df.index[0]
     latitude = float(info_df['Latitude:'].iloc[0])
     longitude = float(info_df['Longitude:'].iloc[0])
     loc1 = str(info_df['Location 1:'].iloc[0])
@@ -79,7 +79,6 @@ for file in scrape_list:
     # Now append the new row to the DataFrame
     new_row = {
         'uid': uid,
-        'name': name,
         'year': year,
         'start_date': startdate,
         'end_date': enddate,
@@ -98,7 +97,7 @@ for file in scrape_list:
     datarows.append(new_row)
 
 output_df = pd.DataFrame(data=datarows, columns=columns)
-output_df.to_csv(output, index=False)
+output_df.to_csv(output + f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
 
 # create join table for alltime all PDFs
 join_paths = scrape_list_pdf
