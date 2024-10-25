@@ -74,5 +74,5 @@ for file in dump_xlsxs:
 
 end_id = id_no_xlsx
 
-print("Done moving pdfs")
+print("Done moving files")
 

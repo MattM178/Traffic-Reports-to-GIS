@@ -8,7 +8,7 @@ import download
 import time
 import csv
 from arcgis.gis import GIS
-from arcgis.features import GeoAccessor, GeoSeriesAccessor
+from arcgis.features import GeoAccessor
 
 # Connect to ArcGIS Online Account.
 gis_username = input("Enter your GIS account username: ")
