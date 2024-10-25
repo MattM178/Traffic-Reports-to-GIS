@@ -2,11 +2,19 @@
 # Paths must be updated once pushed to production to remove "dev" routing
 
 import pandas as pd
-from datetime import datetime
+from datetime import datetime as dt
 import pathlib
 import download
 import time
 import csv
+from arcgis.gis import GIS
+from arcgis.features import GeoAccessor, GeoSeriesAccessor
+
+# Connect to ArcGIS Online Account.
+gis_username = input("Enter your GIS account username: ")
+gis_password = input("Enter your password: ")
+
+gis = GIS("https://clevelandgis.maps.arcgis.com/", gis_username, gis_password)
 
 start = str(download.start_id + 1)  # the id number to start processing, one after previous max
 end = str(download.end_id)
@@ -62,8 +70,8 @@ for file in scrape_list:
     enddate = df2['Date'].iloc[-1]  # study end date
     # While we're here, let's get the date difference to calculate ADT later
     date_format = '%m/%d/%Y'
-    date1 = datetime.strptime(startdate, date_format)
-    date2 = datetime.strptime(enddate, date_format)
+    date1 = dt.strptime(startdate, date_format)
+    date2 = dt.strptime(enddate, date_format)
     difference = (date2 - date1).days  # use this to calculate ADT
     # Now let's get the quantiles
     speedperc15 = df2['Speed'].quantile(0.15)
@@ -97,14 +105,14 @@ for file in scrape_list:
     datarows.append(new_row)
 
 output_df = pd.DataFrame(data=datarows, columns=columns)
-output_df.to_csv(output + f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
+output_df.to_csv(output / f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
 
-# create join table for alltime all PDFs
+# create join table for PDFs
 join_paths = scrape_list_pdf
 # grab the unique ID for each traffic count, the first element before underscore
 uids = [pdf.name.split('_')[0] for pdf in join_paths]
-# jump out of GIS folder and point back to DOS count files
-absolute_paths = ["..\\" + str(pdf.absolute()) for pdf in join_paths]
+# This works, but may only need absolute paths now that the script just pulls them directly into the feature layer
+absolute_paths = [str(pdf.absolute()) for pdf in join_paths]
 relative_paths = [path.replace(strip_path, '') for path in absolute_paths]
 rows = list(zip(uids, relative_paths))
 date = time.strftime('%y_%m_%d')
@@ -112,6 +120,38 @@ with open(f'{download.join_tables}/jointable_From{start}_To{end}_{date}.csv', 'w
     writer = csv.writer(file)
     writer.writerow(['uid', 'path'])
     writer.writerows(rows)
+
+output_df = pd.DataFrame(data=datarows, columns=columns)
+output_df.to_csv(output / f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
+
+# Convert DataFrame to GeoDataFrame
+gdf_output = output_df.copy()
+gdf_output['SHAPE'] = gdf_output.apply(lambda row: {'x': row['lon'], 'y': row['lat'], 'spatialReference': {'wkid': 4326}}, axis=1)
+gdf_output = GeoAccessor.from_df(gdf_output, geometry_column='SHAPE')
+
+# Convert GeoDataFrame to a list of features
+feature_set = gdf_output.spatial.to_featureset().features
+
+# Update Existing Traffic Counts layer
+Traffic_Counts = gis.content.get("2b540e743d1440a48c5f71664b7af5bf") # add id
+layer = Traffic_Counts.layers[0]
+layer.edit_features(adds=feature_set)
+print("Features added successfully to the existing layer.")
+
+# Add attachments using join table
+for uid, rel_path in rows:
+    # Fetch the object ID for each uid (you may need to adjust this to match your setup)
+    matching_feature = layer.query(where=f"uid = '{uid}'").features[0]
+    oid = matching_feature.attributes['OBJECTID']
+    
+    # Full path for attachment
+    attachment_path = strip_path + rel_path
+    
+    # Add attachment
+    attachment_result = layer.attachments.add(oid, attachment_path)
+    print(f"Added attachment to feature UID {uid}: {attachment_result}")
+
+print("All attachments added successfully to the existing layer!")
 
 print("Script Finished!")
 
