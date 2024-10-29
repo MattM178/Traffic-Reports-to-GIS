@@ -38,13 +38,13 @@ f'GIS Workspaces/Traffic Reports to GIS/dev/output')
 strip_path = str(pathlib.Path(f'C:/Users/{download.path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation and Mobility/'
 f'GIS Workspaces/Traffic Reports to GIS/dev')) # used for getting relative paths for join table, but still run the code outside the folder
 
-# Create a new dataframe to interpolate the data. temporary for now, need to add back in UID
+# Create a new dataframe to interpolate the data. temporary for now
 columns = ['uid', 'year', 'start_date', 'end_date', 'lat', 'lon', 'loc1', 'loc2', 'spdperc_15', 'spdperc_50', 'spdperc_85',
-           'spdperc_95', 'average_speed', 'adt']
+           'spdperc_95', 'average_speed', 'adt', 'speed_table']
 # output_df = pd.DataFrame(columns=columns)
 datarows = []
 
-# Read each xlsx into two dataframes - headers and content. Add UID after testing
+# Read each xlsx into two dataframes - headers and content.
 for file in scrape_list:
     uid = file.name.split('_')[0]
     df = pd.read_excel(file)
@@ -68,21 +68,29 @@ for file in scrape_list:
     # Start filling in values. This is where we will do some math
     startdate = df2['Date'].iloc[0]  # study start date
     enddate = df2['Date'].iloc[-1]  # study end date
-    # While we're here, let's get the date difference to calculate ADT later
-    date_format = '%m/%d/%Y'
-    date1 = dt.strptime(startdate, date_format)
-    date2 = dt.strptime(enddate, date_format)
-    difference = (date2 - date1).days  # use this to calculate ADT
+    starttime = df2['Time'].iloc[0]  # study start time
+    endtime = df2['Time'].iloc[-1]  # study end time
+    startdatetime = startdate + " " + starttime
+    enddatetime = enddate + " " + endtime
+    datetime_format = '%m/%d/%Y %I:%M:%S %p'
+    date1 = dt.strptime(startdatetime, datetime_format)
+    date2 = dt.strptime(enddatetime, datetime_format)
+    difference = (date2 - date1).total_seconds() / (24 * 3600)  # use this to calculate ADT
+    ADT = int((df2.shape[0] - 1) / difference)
     # Now let's get the quantiles
     speedperc15 = df2['Speed'].quantile(0.15)
     speedperc50 = df2['Speed'].quantile(0.50)
     speedperc85 = df2['Speed'].quantile(0.85)
     speedperc95 = df2['Speed'].quantile(0.95)
-    # Now let's calculate ADT
-    ADT = int((df2.shape[0] - 1) / difference)
 
     # Next do the average speed
     avgspeed = int(df2['Speed'].mean())
+
+    # Now calcuate if report qualifies the location for a speed table
+    if 1000 <= ADT <= 4000 and avgspeed >= 25 and speedperc85 >= 31:
+        speed_table = "Yes"
+    else:
+        speed_table = "No"
 
     # Now append the new row to the DataFrame
     new_row = {
@@ -99,7 +107,8 @@ for file in scrape_list:
         'spdperc_85': speedperc85,
         'spdperc_95': speedperc95,
         'average_speed': avgspeed,
-        'adt': ADT
+        'adt': ADT,
+        'speed_table': speed_table
     }
     #print(new_row)
     datarows.append(new_row)
@@ -121,6 +130,7 @@ with open(f'{download.join_tables}/jointable_From{start}_To{end}_{date}.csv', 'w
     writer.writerow(['uid', 'path'])
     writer.writerows(rows)
 
+# Save the result data to a csv (probably obsolete at this time)
 output_df = pd.DataFrame(data=datarows, columns=columns)
 output_df.to_csv(output / f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
 
