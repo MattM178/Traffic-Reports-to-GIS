@@ -5,30 +5,11 @@
 
 ## Setup
 
-### In order to run the update, you need to have Python, Miniconda, and ArcGIS Pro installed. Alternatively, you'll need your environment configured to access ArcGIS python API if you do not have ArcGIS Pro. Regardless, this code is designed to work directly with ArcGIS Online (AGO), so an account is required to use this code. If you are running this in a python IDE, your interpeter should be set to the ArcGIS Pro python interpreter, or otherwise have your interperter set up to use the ArcGIS python API.
+### In order to run the update, you need to have ArcGIS Pro installed. This code is designed to work directly with ArcGIS Online (AGO), so an account is required to use this code. If you are running this in a python IDE, your interpeter should be set to the ArcGIS Pro python interpreter, or otherwise have your interperter set up to use the ArcGIS python API.
 
 Python is the programming language and interprets the code. 
 
-Conda will manage the environment of tools Python can use. Basically, Conda installs all (or most) the right "plugins" so this code can run.
-
-1. Install Python for Windows
-2. Install Miniconda
-3. Clone the trafficreports environment.   
-   **You only need to set up the environment once on a machine.**
-
-4. Open Miniconda command prompt
-5. Run this command below to clone the environment:
-
-    `conda env create -n trafficreports --file environment.yml`
-
-    It should create an environment in your conda directory (usually in your Windows user home under miniconda)
-
-6. You will need to install the arcgis package through conda to use the API You can do so by opening your conda prompt and running this command:
-
-   `conda install esri::arcgis`
-
-You can use the Anaconda Python interpreter, but you can also use the ArcGIS Python interpreter, which comes with ArcGIS Pro. [This link provides more information on how to set up an IDE, in this case PyCharm, to use the ArcGIS Python interpreter.](https://community.esri.com/t5/python-documents/pycharm-setup-for-arcgis-desktop/ta-p/1125129)
-
+ArcGIS Pro comes with its own python envrionment, so when it comes time to run the script you can activate that enviroment and run the script within it.
 
 ## Step 1: RUNNING THE MAIN SCRIPT (MAIN_V2.PY)
 
@@ -41,12 +22,10 @@ This script is part of a multi-step process to update a new batch of traffic cou
 * Convert the dataframe into a geodataframe, then into a list of features and adds them to the Traffic Count Reports layer. 
 * Add the attachments identified in the join table to the newly added features in the previous step.
 
-You need to run main_V2.py using the "trafficreports" environment. That requires doing the setup once for the machine above.
-1. First activate that environment with: `conda activate trafficreports`
-
-2. Navigate to the project root folder on your computer: 
-*Transportation and Mobility\GIS Workspaces\Traffic Reports to GIS* by using cd (current directory command).
-`cd (the path on your drive)`
+You need to run main_V2.py using the "arcgispro-py3" environment.
+1. First open a command prompt in Windows and navigate to the project root folder on your computer: 
+*Transportation and Mobility\GIS Workspaces\Traffic Reports to GIS* by using cd (current directory command). `cd (the path on your drive)`
+2. No activate the ArcGIS Pro python enviroment by entering the path to to the enviroment. Paths may vary depending on your installation (like if it is installed system wide or for a specific user), but the default path is: `"C:\Program Files\ArcGIS\Pro\bin\Python\Scripts\proenv"`
 3. Execute the script with: `python main_V2.py`
 
 ### Going through the script
@@ -54,9 +33,12 @@ You need to run main_V2.py using the "trafficreports" environment. That requires
 1. Enter the year of the reports you're processing when prompted.
 2. For the username prompt, enter your username. This is typically what you use to log in to your Windows machine. On enterprise systems where usernames are associated with organization email accounts, this is the content before the @ symbol in your email.
 3. Once the script moves the files, it will print `Done moving files`. You'll then be prompted to enter your AGO username and password.
-4. Now let this script run like the wind.You'll see some feel-good printouts once the features are successfully added, printouts for each successful attachment, and finally `Script Finished!` once fully complete. If you want, you can check for the 2 output CSV files.
+4. After entering your login information you will need to enter the item id of the feature layer. Item ids can be found by navigating to the ArcGIS Online page of the target feature layer and pulling the characters from the URL following `?id=`.
+5. Now let this script run like the wind. You'll see some feel-good printouts once the features are successfully added, printouts for each successful attachment, and finally `Script Finished!` once fully complete. If you want, you can check for the 2 output CSV files.
    1. One CSV in \output --- Main table that has the coordinates and all speed/count as rows 
    2. One CSV in \join tables --- Table that ArcGIS uses to find the right PDF to upload to each point
+
+6. Lastly, you can double check the feature layer to which you've just added new features and confirm they are there and formatted correctly.
 
 ### That concludes all necessary steps to bring data over!
 

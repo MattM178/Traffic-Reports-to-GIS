@@ -13,6 +13,7 @@ from arcgis.features import GeoAccessor
 # Connect to ArcGIS Online Account.
 gis_username = input("Enter your GIS account username: ")
 gis_password = input("Enter your password: ")
+item_id = input("Enter the item id for the feature layer to which you're adding count features: ")
 
 gis = GIS("https://clevelandgis.maps.arcgis.com/", gis_username, gis_password)
 
@@ -147,7 +148,7 @@ gdf_output = GeoAccessor.from_df(gdf_output, geometry_column='SHAPE')
 feature_set = gdf_output.spatial.to_featureset().features
 
 # Update Existing Traffic Counts layer
-Traffic_Counts = gis.content.get("22856c861b20448da86192816e8020a5") # add id
+Traffic_Counts = gis.content.get(item_id) # add id
 layer = Traffic_Counts.layers[0]
 layer.edit_features(adds=feature_set)
 print("Features added successfully to the existing layer.")
