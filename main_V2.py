@@ -24,6 +24,10 @@ existing_list = list((pathlib.Path(download.base_path) / download.year / 'XLSXs'
 existing_list_pdf = list((pathlib.Path(download.base_path) / download.year / 'PDFs').glob('**/*.pdf'))
 process_list_nums = [path.name.split('_')[0] for path in existing_list_pdf]
 
+# Adjust process_list_nums to account for missing pdfs in DOS count files. This is janky but it works
+# additional_numbers = [str(i) for i in range(0, 640)]
+# process_list_nums = additional_numbers + process_list_nums
+
 try:
     start_idx = process_list_nums.index(start)
 except ValueError as ex:
@@ -33,10 +37,10 @@ scrape_list = existing_list[start_idx:]  # only XLSXs that haven't been processe
 scrape_list_pdf = existing_list_pdf[start_idx:] # only PDFs that haven't been processed yet
 
 output = pathlib.Path(f'C:/Users/{download.path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation and Mobility/'
-f'GIS Workspaces/Traffic Reports to GIS/dev/output')
+f'GIS Workspaces/Traffic Reports to GIS/output')
 
 strip_path = str(pathlib.Path(f'C:/Users/{download.path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation and Mobility/'
-f'GIS Workspaces/Traffic Reports to GIS/dev')) # used for getting relative paths for join table, but still run the code outside the folder
+f'GIS Workspaces/Traffic Reports to GIS')) # used for getting relative paths for join table, but still run the code outside the folder
 
 # Create a new dataframe to interpolate the data. temporary for now
 columns = ['uid', 'year', 'start_date', 'end_date', 'lat', 'lon', 'loc1', 'loc2', 'spdperc_15', 'spdperc_50', 'spdperc_85',
@@ -110,7 +114,7 @@ for file in scrape_list:
         'adt': ADT,
         'speed_table': speed_table
     }
-    #print(new_row)
+    print(new_row) # Debugging
     datarows.append(new_row)
 
 output_df = pd.DataFrame(data=datarows, columns=columns)
@@ -130,9 +134,9 @@ with open(f'{download.join_tables}/jointable_From{start}_To{end}_{date}.csv', 'w
     writer.writerow(['uid', 'path'])
     writer.writerows(rows)
 
-# Save the result data to a csv (probably obsolete at this time)
-output_df = pd.DataFrame(data=datarows, columns=columns)
-output_df.to_csv(output / f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
+# Save the result data to a csv
+# output_df = pd.DataFrame(data=datarows, columns=columns)
+# output_df.to_csv(output / f"Radar_Report_Start_{start}_End_{end}.csv", index=False)
 
 # Convert DataFrame to GeoDataFrame
 gdf_output = output_df.copy()
@@ -143,7 +147,7 @@ gdf_output = GeoAccessor.from_df(gdf_output, geometry_column='SHAPE')
 feature_set = gdf_output.spatial.to_featureset().features
 
 # Update Existing Traffic Counts layer
-Traffic_Counts = gis.content.get("2b540e743d1440a48c5f71664b7af5bf") # add id
+Traffic_Counts = gis.content.get("22856c861b20448da86192816e8020a5") # add id
 layer = Traffic_Counts.layers[0]
 layer.edit_features(adds=feature_set)
 print("Features added successfully to the existing layer.")

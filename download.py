@@ -8,32 +8,32 @@ year = str(input('Enter year: '))
 path_input = str(input('Enter your username. This is usually your first initial and last name (and digits if '
                        'applicable) found in front of your email address @clevelandohio.gov: '))
 
-# commented paths represent production paths. This is currently formatted for testing.
-# base_path = pathlib.Path(f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning '
-#                          f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/DOS count files')
+# commented paths represent testing paths. This is currently formatted for production.
 base_path = pathlib.Path(f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning '
-                         f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/DOS count files')
+                         f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/DOS count files')
+# base_path = pathlib.Path(f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning '
+#                         f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/DOS count files')
 
-# output = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-#          f'and Mobility/GIS Workspaces/Traffic Reports to GIS/output'
 output = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-         f'and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/output'
+         f'and Mobility/GIS Workspaces/Traffic Reports to GIS/output'
+# output = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
+#         f'and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/output'
 
-# join_tables = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning ' \
-#               f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/join tables'
 join_tables = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning ' \
-              f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/join tables'
+              f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/join tables'
+# join_tables = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning ' \
+#               f'Group/Transportation and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/join tables'
 
-# dump_dir_pdf = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-#            f'and Mobility/Traffic & Speed Counts/Counts {year}/PDFs'
 dump_dir_pdf = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-            f'and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/Traffic & Speed Counts/Counts {year}/PDFs'
+               f'and Mobility/Traffic & Speed Counts/Counts {year}/PDFs'
+# dump_dir_pdf = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
+#                f'and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/Traffic & Speed Counts/Counts {year}/PDFs'
 
 # added dump directory for xlsx files - this is referenced by main_xlsx
-# dump_dir_xlsx = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-#            f'and Mobility/Traffic & Speed Counts/Counts {year}/XLSXs'
 dump_dir_xlsx = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
-            f'and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/Traffic & Speed Counts/Counts {year}/XLSXs'
+                f'and Mobility/Traffic & Speed Counts/Counts {year}/XLSXs'
+# dump_dir_xlsx = f'C:/Users/{path_input}/OneDrive - City of Cleveland/Shared Documents - City Planning Group/Transportation ' \
+#                 f'and Mobility/GIS Workspaces/Traffic Reports to GIS/dev/Traffic & Speed Counts/Counts {year}/XLSXs'
 
 # Set up and confirm existing files
 
