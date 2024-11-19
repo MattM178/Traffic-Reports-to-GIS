@@ -25,7 +25,7 @@ This script is part of a multi-step process to update a new batch of traffic cou
 You need to run main_V2.py using the "arcgispro-py3" environment.
 1. First open a command prompt in Windows and navigate to the project root folder on your computer: 
 *Transportation and Mobility\GIS Workspaces\Traffic Reports to GIS* by using cd (current directory command). `cd (the path on your drive)`
-2. No activate the ArcGIS Pro python enviroment by entering the path to to the enviroment. Paths may vary depending on your installation (like if it is installed system wide or for a specific user), but the default path is: `"C:\Program Files\ArcGIS\Pro\bin\Python\Scripts\proenv"`
+2. Now activate the ArcGIS Pro python enviroment by entering the path to to the enviroment. Paths may vary depending on your installation (like if it is installed system wide or for a specific user), but the default path is: `"C:\Program Files\ArcGIS\Pro\bin\Python\Scripts\proenv"`
 3. Execute the script with: `python main_V2.py`
 
 ### Going through the script
